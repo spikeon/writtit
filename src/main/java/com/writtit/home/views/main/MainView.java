@@ -16,11 +16,18 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.theme.Theme;import com.vaadin.flow.theme.lumo.Lumo;
 
 import com.writtit.home.views.main.MainView;
 import com.writtit.home.views.home.HomeView;
+
+import org.vaadin.googleanalytics.tracking.EnableGoogleAnalytics;
+import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
+import org.vaadin.googleanalytics.tracking.TrackerConfiguration;
+import org.vaadin.googleanalytics.tracking.TrackerConfigurator;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -28,7 +35,8 @@ import com.writtit.home.views.home.HomeView;
 @JsModule("./styles/shared-styles.js")
 @PWA(name = "writtit", shortName = "writtit")
 @Theme(value = Lumo.class, variant = Lumo.LIGHT)
-public class MainView extends AppLayout {
+@EnableGoogleAnalytics(value = "UA-171298506-1")
+public class MainView extends AppLayout implements TrackerConfigurator, PageConfigurator {
 
     private final Tabs menu;
 
@@ -82,5 +90,14 @@ public class MainView extends AppLayout {
             return child instanceof RouterLink && ((RouterLink) child).getHref().equals(target);
         }).findFirst();
         tabToSelect.ifPresent(tab -> menu.setSelectedTab((Tab) tab));
+    }
+
+    @Override public void configureTracker(TrackerConfiguration trackerConfiguration) {
+        trackerConfiguration.setCookieDomain("writtit.com");
+    }
+
+    @Override public void configurePage(InitialPageSettings settings) {
+        settings.addInlineWithContents("<script data-ad-client=\"ca-pub-3654592274227692\" async src=\"https://pagead2" +
+                ".googlesyndication.com/pagead/js/adsbygoogle.js\"></script>", InitialPageSettings.WrapMode.NONE);
     }
 }

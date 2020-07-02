@@ -16,7 +16,7 @@ public class HomeView extends Div {
 
     public HomeView() {
         setId("home-view");
-        add(new Label("Content placeholder"));
+        add(new Label("Future home of writtit.com"));
     }
 
 }
